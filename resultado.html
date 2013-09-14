@@ -7,6 +7,7 @@
 
         <div id="feedback" style="display:none;background:red;">
             <h2>feedback</h2>
+            <a href="#" id="feedback-fechar">fechar</a>
         </div>
 
     <h1>Resultado</h1>
@@ -25,7 +26,14 @@
             if (e.state.area === 'feedback') {
                 document.getElementById('feedback').style.display = 'block';
             }
-        }
+        };
+
+        // Não esquecer o preventDefault, pois o anchor dá trigger no popstate
+        document.getElementById('feedback-fechar').onclick = function (e) {
+            e.preventDefault();
+            document.getElementById('feedback').style.display = 'none';
+            history.back();
+        };
 
         history.replaceState({area: 'resultado'}, 'resultado', '?resultado=true#' + location.hash);
         setTimeout(function () {
