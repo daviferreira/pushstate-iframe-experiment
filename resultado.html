@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>iframe</title>
+    </head>
+    <body>
+
+        <div id="feedback" style="display:none;background:red;">
+            <h2>feedback</h2>
+        </div>
+
+    <h1>Resultado</h1>
+
+    <script src="history.js"></script>
+
+    <script>
+        parent.window.reset = false;
+        parent.window.back = true;
+        window.onpopstate = function(e) {
+            console.log(e);
+            console.log(e.state);
+            if (e.state.area === 'resultado') {
+                document.getElementById('feedback').style.display = 'none';
+            }
+            if (e.state.area === 'feedback') {
+                document.getElementById('feedback').style.display = 'block';
+            }
+        }
+
+        history.replaceState({area: 'resultado'}, 'resultado', '?resultado=true#' + location.hash);
+        setTimeout(function () {
+            document.getElementById('feedback').style.display = 'block';
+            history.pushState({area: 'feedback'}, 'feedback', '?feedback=true#' + location.hash);
+        }, 400);
+    </script>
+
+    </body>
+</html>

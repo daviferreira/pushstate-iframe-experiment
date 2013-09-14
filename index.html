@@ -1,0 +1,69 @@
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>opa</title>
+        <style>
+            iframe {
+                position: absolute;
+                background-color: #fff;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>push</h1>
+        <a href="interatividade1.html" class="lnk-interatividade">interatividade 1</a>
+        <a href="interatividade2.html" class="lnk-interatividade">interatividade 2</a>
+        <script src="history.js"></script>
+        <script>
+            window.onpopstate = function(e) {
+                console.log(e.state.area);
+                if (e.state.area === 'palco') {
+                    window.back = false;
+                    closeInteratividade(false);
+                }
+                if (e.state.area === 'interatividade') {
+                    showInteratividade(e.state.url, false);
+                }
+            }
+
+            var lnk = document.querySelectorAll('.lnk-interatividade'),
+                i;
+            for (i = 0; i < lnk.length; i += 1) {
+                lnk[i].onclick = function (e) {
+                    e.preventDefault();
+                    showInteratividade(this.href, true);
+                };
+            }
+
+            // Não pode chamar o pushState de dentro do próprio pushState!
+            function showInteratividade(href, pushState) {
+                var iframe;
+                if (pushState) {
+                    window.reset = true;
+                    history.pushState({area: 'interatividade', url: href}, href, href);
+                }
+                iframe = document.createElement('iframe');
+                iframe.id = 'iframe-interatividade';
+                iframe.src = href;
+                document.body.appendChild(iframe);
+            }
+
+            // Remove iframe do DOM para limpar histórico!
+            function closeInteratividade(pushState) {
+                var iframe = document.getElementById('iframe-interatividade');
+                document.body.removeChild(iframe);
+                if (pushState) {
+                    history.pushState({area: 'palco'}, 'palco fechar', '/pushstate/index.html');
+                }
+            }
+
+            history.replaceState({area: 'palco'}, 'Palco home', location.href);
+
+
+        </script>
+    </body>
+</html>
